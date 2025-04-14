@@ -217,7 +217,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         <div class="title">Halaman Utama</div>
         <div class="user-info" onclick="toggleModal()">
           <span><?php echo htmlspecialchars($_SESSION['name']); ?>
-            (<?php echo htmlspecialchars($_SESSION['role']); ?>)</span>
+          </span>
           <div class="user-icon">👤</div>
         </div>
       </div>
