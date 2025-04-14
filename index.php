@@ -1,3 +1,46 @@
+<?php
+session_start();
+include 'config.php';
+
+// Cek jika user sudah login, redirect ke dashboard
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+  header("Location: dashboard.php");
+  exit;
+}
+
+$error = '';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $username = $conn->real_escape_string($_POST['username']);
+  $password = $_POST['password'];
+
+  // Query untuk mencari user
+  $sql = "SELECT * FROM users WHERE username = '$username'";
+  $result = $conn->query($sql);
+
+  if ($result->num_rows == 1) {
+    $user = $result->fetch_assoc();
+
+    // Verifikasi password
+    if (password_verify($password, $user['password'])) {
+      // Set session
+      $_SESSION['logged_in'] = true;
+      $_SESSION['user_id'] = $user['id'];
+      $_SESSION['username'] = $user['username'];
+      $_SESSION['name'] = $user['name'];
+      $_SESSION['role'] = $user['role'];
+
+      // Redirect ke dashboard
+      header("Location: dashboard.php");
+      exit;
+    } else {
+      $error = "Password salah!";
+    }
+  } else {
+    $error = "Username tidak ditemukan!";
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -165,6 +208,32 @@
     .login-btn:hover {
       background: #666;
     }
+
+    .register-btn {
+      width: 100%;
+      padding: 12px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .register-btn:hover {
+      background: #45a049;
+    }
+
+    .error-message {
+      color: #ffcccc;
+      text-align: center;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 
@@ -176,7 +245,6 @@
       <div class="header-subtitle">Universitas Muhammadiyah Banjarmasin</div>
     </div>
   </header>
-
   <div class="main-content">
     <div class="container">
       <div class="left-side">
@@ -187,7 +255,12 @@
       <div class="right-side">
         <div class="user-icon">👤</div>
         <h2 class="login-title">Login</h2>
-        <form class="login-form" action="dashboard.php" method="POST">
+
+        <?php if (!empty($error)): ?>
+          <div class="error-message"><?php echo $error; ?></div>
+        <?php endif; ?>
+
+        <form class="login-form" action="index.php" method="POST">
           <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required>
@@ -197,6 +270,7 @@
             <input type="password" id="password" name="password" required>
           </div>
           <button type="submit" class="login-btn">Login</button>
+          <a href="register.php" class="register-btn">Register</a>
         </form>
       </div>
     </div>

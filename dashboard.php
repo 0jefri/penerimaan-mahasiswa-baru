@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Cek jika user belum login, redirect ke halaman login
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+  header("Location: index.php");
+  exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +35,6 @@
     .sidebar {
       width: 230px;
       background: #1E3A8A;
-      /* deep navy blue */
       color: #fff;
       display: flex;
       flex-direction: column;
@@ -50,7 +59,6 @@
 
     .sidebar a:hover {
       background: #3B82F6;
-      /* soft blue hover */
       color: #fff;
     }
 
@@ -107,16 +115,45 @@
       color: #1f2937;
       font-size: 16px;
     }
+
+    .welcome-message {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .user-details {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 16px;
+      background: #ef4444;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+    }
   </style>
 </head>
 
 <body>
-
   <div class="dashboard-container">
     <!-- Sidebar -->
     <div class="sidebar">
       <h2>KP2MB</h2>
-      <a href="#">Dashboard</a>
+      <a href="dashboard.php">Dashboard</a>
       <a href="#">Data PMB</a>
       <a href="#">Data Master</a>
       <div class="submenu">
@@ -135,18 +172,30 @@
       <div class="topbar">
         <div class="title">Halaman Utama</div>
         <div class="user-info">
-          <span>Admin</span>
+          <span><?php echo htmlspecialchars($_SESSION['name']); ?>
+            (<?php echo htmlspecialchars($_SESSION['role']); ?>)</span>
           <div class="user-icon">👤</div>
         </div>
       </div>
 
       <!-- Content -->
       <div class="content">
-        <p>Kantor Promosi dan Penerimaan Mahasiswa Baru</p>
+        <div class="welcome-message">
+          <h2>Selamat Datang di Sistem K-MEANS PMB</h2>
+          <p>Kantor Promosi dan Penerimaan Mahasiswa Baru - Universitas Muhammadiyah Banjarmasin</p>
+        </div>
+
+        <div class="user-details">
+          <h3>Informasi Akun</h3>
+          <p><strong>Username:</strong> <?php echo htmlspecialchars($_SESSION['username']); ?></p>
+          <p><strong>Nama:</strong> <?php echo htmlspecialchars($_SESSION['name']); ?></p>
+          <p><strong>Role:</strong> <?php echo htmlspecialchars($_SESSION['role']); ?></p>
+
+          <a href="logout.php" class="logout-btn">Logout</a>
+        </div>
       </div>
     </div>
   </div>
-
 </body>
 
 </html>
