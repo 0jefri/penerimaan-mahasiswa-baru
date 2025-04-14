@@ -40,6 +40,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
     /* Sidebar */
     .sidebar {
+      border-right: 3px solid;
       width: 230px;
       background: #1E3A8A;
       color: #fff;

@@ -38,7 +38,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $insert_sql = "INSERT INTO users (username, name, role, password) VALUES ('$username', '$name', '$role', '$hashed_password')";
 
       if ($conn->query($insert_sql) === TRUE) {
-        $success = "Registrasi berhasil! Silakan login.";
+        $success = "Registrasi berhasil! Anda akan dialihkan ke halaman login dalam 3 detik.";
+        echo "<script>
+  setTimeout(function() {
+    window.location.href = 'index.php';
+  }, 3000);
+</script>";
+
       } else {
         $error = "Error: " . $conn->error;
       }
@@ -259,6 +265,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </form>
     </div>
   </div>
+
+  <div id="successModal"
+    style="display: none; position: fixed; z-index: 999; background: rgba(0,0,0,0.7); top:0; left:0; width:100%; height:100%; align-items: center; justify-content: center;">
+    <div style="background: white; color: black; padding: 30px; border-radius: 10px; text-align: center;">
+      <h3>✅ Registrasi Berhasil!</h3>
+      <p>Anda akan diarahkan ke halaman login dalam 3 detik...</p>
+    </div>
+  </div>
+  <script>
+    // Tampilkan modal jika registrasi berhasil
+    <?php if (!empty($success)): ?>
+      document.getElementById("successModal").style.display = "flex";
+      setTimeout(function () {
+        window.location.href = "index.php";
+      }, 3000);
+    <?php endif; ?>
+  </script>
+
 </body>
 
 </html>
