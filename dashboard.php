@@ -15,15 +15,22 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
   <meta charset="UTF-8">
   <title>Dashboard Admin - KP2MB</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('assets/images/background.jpeg');
+      background-color: rgba(5, 137, 244, 0.6);
+      background-blend-mode: overlay;
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: #f4f6fb;
     }
 
     .dashboard-container {
@@ -95,6 +102,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       align-items: center;
       gap: 10px;
       color: #1E3A8A;
+      cursor: pointer;
+      position: relative;
     }
 
     .topbar .user-icon {
@@ -109,26 +118,46 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       font-size: 14px;
     }
 
-    /* Content */
-    .content {
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
       padding: 30px;
-      color: #1f2937;
-      font-size: 16px;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
     }
 
-    .welcome-message {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
+    .close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
     }
 
-    .user-details {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .modal-content h3 {
+      margin-bottom: 15px;
+      color: #1E3A8A;
+    }
+
+    .modal-content p {
+      margin-bottom: 10px;
     }
 
     .logout-btn {
@@ -144,6 +173,21 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
     .logout-btn:hover {
       background: #dc2626;
+    }
+
+    /* Content */
+    .content {
+      padding: 30px;
+      color: #1f2937;
+      font-size: 16px;
+    }
+
+    .welcome-message {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -171,7 +215,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       <!-- Topbar -->
       <div class="topbar">
         <div class="title">Halaman Utama</div>
-        <div class="user-info">
+        <div class="user-info" onclick="toggleModal()">
           <span><?php echo htmlspecialchars($_SESSION['name']); ?>
             (<?php echo htmlspecialchars($_SESSION['role']); ?>)</span>
           <div class="user-icon">👤</div>
@@ -184,18 +228,36 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
           <h2>Selamat Datang di Sistem K-MEANS PMB</h2>
           <p>Kantor Promosi dan Penerimaan Mahasiswa Baru - Universitas Muhammadiyah Banjarmasin</p>
         </div>
-
-        <div class="user-details">
-          <h3>Informasi Akun</h3>
-          <p><strong>Username:</strong> <?php echo htmlspecialchars($_SESSION['username']); ?></p>
-          <p><strong>Nama:</strong> <?php echo htmlspecialchars($_SESSION['name']); ?></p>
-          <p><strong>Role:</strong> <?php echo htmlspecialchars($_SESSION['role']); ?></p>
-
-          <a href="logout.php" class="logout-btn">Logout</a>
-        </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal Akun -->
+  <div id="accountModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleModal()">&times;</span>
+      <h3>Informasi Akun</h3>
+      <p><strong>Username:</strong> <?php echo htmlspecialchars($_SESSION['username']); ?></p>
+      <p><strong>Nama:</strong> <?php echo htmlspecialchars($_SESSION['name']); ?></p>
+      <p><strong>Role:</strong> <?php echo htmlspecialchars($_SESSION['role']); ?></p>
+      <a href="logout.php" class="logout-btn">Logout</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleModal() {
+      const modal = document.getElementById('accountModal');
+      modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close modal if user clicks outside the modal content
+    window.onclick = function (event) {
+      const modal = document.getElementById('accountModal');
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    }
+  </script>
 </body>
 
 </html>
