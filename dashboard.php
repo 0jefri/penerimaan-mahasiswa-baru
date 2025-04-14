@@ -18,7 +18,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     body {
       font-family: Arial, sans-serif;
       background-image: url('assets/images/background.jpeg');
-      background-color: rgba(5, 137, 244, 0.6);
+      background-color: rgba(3, 136, 244, 0.9);
       background-blend-mode: overlay;
       background-size: cover;
       background-position: center;
