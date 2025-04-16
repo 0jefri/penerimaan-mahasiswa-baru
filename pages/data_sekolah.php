@@ -12,9 +12,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 require_once '../config.php';
 
-// Query untuk mendapatkan data prodi
-$sql = "SELECT * FROM prodi";
-$result = $conn->query($sql);
+// Query untuk mendapatkan data sekolah
+$query = "SELECT * FROM sekolah ORDER BY name";
+$result = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +22,7 @@ $result = $conn->query($sql);
 
 <head>
   <meta charset="UTF-8">
-  <title>Data Program Studi - KP2MB</title>
+  <title>Data Sekolah - KP2MB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -46,6 +46,12 @@ $result = $conn->query($sql);
     .dashboard-container {
       display: flex;
       height: 100vh;
+    }
+
+    .content {
+      padding: 30px;
+      color: #1f2937;
+      font-size: 16px;
     }
 
     /* Sidebar */
@@ -123,79 +129,7 @@ $result = $conn->query($sql);
       border-radius: 50%;
     }
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-content {
-      background-color: #fff;
-      margin: 10% auto;
-      padding: 30px;
-      border-radius: 8px;
-      width: 400px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      position: relative;
-    }
-
-    .close {
-      position: absolute;
-      right: 15px;
-      top: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      cursor: pointer;
-    }
-
-    .modal-content h3 {
-      margin-bottom: 15px;
-      color: #1E3A8A;
-    }
-
-    .modal-content p {
-      margin-bottom: 10px;
-    }
-
-    .logout-btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 8px 16px;
-      background: #ef4444;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background 0.3s;
-    }
-
-    .logout-btn:hover {
-      background: #dc2626;
-    }
-
-    /* Content */
-    .content {
-      padding: 30px;
-      color: #1f2937;
-      font-size: 16px;
-    }
-
-    .welcome-message {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
-
-    /* Tambahan style untuk tabel prodi */
+    /* Tambahan style untuk tabel sekolah */
     .content-header {
       display: flex;
       justify-content: space-between;
@@ -264,8 +198,8 @@ $result = $conn->query($sql);
       <a href="data_pmb.php">Data PMB</a>
       <a href="#">Data Master</a>
       <div class="submenu">
-        <a href="data_prodi.php" class="active">- Program Studi</a>
-        <a href="data_sekolah.php">- Data Sekolah</a>
+        <a href="data_prodi.php">- Program Studi</a>
+        <a href="data_sekolah.php" class="active">- Data Sekolah</a>
       </div>
       <a href="#">Clustering</a>
       <div class="submenu">
@@ -276,7 +210,7 @@ $result = $conn->query($sql);
     <!-- Main -->
     <div class="main-section">
       <div class="topbar">
-        <div class="title">Halaman Data Prodi</div>
+        <div class="title">Halaman Data Sekolah</div>
         <div class="user-info" onclick="toggleModal()">
           <span><?php echo htmlspecialchars($_SESSION['name']); ?></span>
           <div class="user-icon">👤</div>
@@ -286,8 +220,8 @@ $result = $conn->query($sql);
       <!-- Content -->
       <div class="content">
         <div class="content-header">
-          <h3>Data Program Studi</h3>
-          <a href="tambah_prodi.php" class="btn-tambah">
+          <h3>Data Sekolah</h3>
+          <a href="tambah_sekolah.php" class="btn-tambah">
             <span>+</span> Tambah
           </a>
         </div>
@@ -296,7 +230,10 @@ $result = $conn->query($sql);
           <thead>
             <tr>
               <th>No</th>
-              <th>Program Studi</th>
+              <th>Nama Sekolah</th>
+              <th>Pendidikan</th>
+              <th>Provinsi</th>
+              <th>Kabupaten</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -308,9 +245,12 @@ $result = $conn->query($sql);
               <tr>
                 <td><?= $no++ ?></td>
                 <td><?= htmlspecialchars($row['name']) ?></td>
+                <td><?= htmlspecialchars($row['kecamatan']) ?></td>
+                <td><?= htmlspecialchars($row['provinsi']) ?></td>
+                <td><?= htmlspecialchars($row['kabupaten']) ?></td>
                 <td class="action-icons">
-                  <a href="edit_prodi.php?id=<?= $row['id'] ?>" title="Edit">✏️</a>
-                  <a href="hapus_prodi.php?id=<?= $row['id'] ?>" title="Hapus"
+                  <a href="edit_sekolah.php?id=<?= $row['id'] ?>" title="Edit">✏️</a>
+                  <a href="hapus_sekolah.php?id=<?= $row['id'] ?>" title="Hapus"
                     onclick="return confirm('Yakin ingin menghapus?')">❌</a>
                 </td>
               </tr>

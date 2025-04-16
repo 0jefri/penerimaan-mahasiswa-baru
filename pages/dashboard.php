@@ -207,7 +207,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       <a href="#">Data Master</a>
       <div class="submenu">
         <a href="data_prodi.php">- Program Studi</a>
-        <a href="#">- Data Sekolah</a>
+        <a href="data_sekolah.php">- Data Sekolah</a>
       </div>
       <a href="#">Clustering</a>
       <div class="submenu">
