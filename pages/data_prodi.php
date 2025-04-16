@@ -4,11 +4,17 @@ ini_set('display_errors', 1);
 
 session_start();
 
-// Cek jika user belum login, redirect ke halaman login
+// Cek login
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
   header("Location: ../index.php");
   exit;
 }
+
+require_once '../config.php';
+
+// Query untuk mendapatkan data prodi
+$sql = "SELECT * FROM prodi";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +22,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Admin - KP2MB</title>
+  <title>Data Program Studi - KP2MB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -88,39 +94,33 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
     /* Topbar */
     .topbar {
-      background: #ffffff;
-      padding: 15px 25px;
+      background-color: #1E3A8A;
+      color: white;
+      padding: 15px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #dcdfe3;
+      align-items: center;
+      border-radius: 8px;
+      margin-bottom: 20px;
     }
 
-    .topbar .title {
+    .title {
+      font-size: 1.2rem;
       font-weight: bold;
-      color: #1E3A8A;
-      font-size: 18px;
     }
 
     .topbar .user-info {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: #1E3A8A;
       cursor: pointer;
-      position: relative;
     }
 
     .topbar .user-icon {
-      width: 28px;
-      height: 28px;
+      background-color: white;
+      color: #1E3A8A;
+      padding: 5px;
       border-radius: 50%;
-      background: #3B82F6;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
     }
 
     /* Modal */
@@ -194,19 +194,77 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
     }
+
+    /* Tambahan style untuk tabel prodi */
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .btn-tambah {
+      background-color: #1E3A8A;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-tambah:hover {
+      background-color: #3B82F6;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .data-table th {
+      background-color: #1E3A8A;
+      color: white;
+      font-weight: bold;
+    }
+
+    .data-table tr:hover {
+      background-color: #f3f4f6;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-icons a {
+      color: #1E3A8A;
+      text-decoration: none;
+    }
   </style>
 </head>
 
 <body>
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <div class="sidebar">
       <h2>KP2MB</h2>
       <a href="dashboard.php">Dashboard</a>
       <a href="data_pmb.php">Data PMB</a>
       <a href="#">Data Master</a>
       <div class="submenu">
-        <a href="data_prodi.php">- Program Studi</a>
+        <a href="data_prodi.php" class="active">- Program Studi</a>
         <a href="#">- Data Sekolah</a>
       </div>
       <a href="#">Clustering</a>
@@ -217,27 +275,52 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
     <!-- Main -->
     <div class="main-section">
-      <!-- Topbar -->
       <div class="topbar">
-        <div class="title">Halaman Utama</div>
+        <div class="title">Halaman Data Prodi</div>
         <div class="user-info" onclick="toggleModal()">
-          <span><?php echo htmlspecialchars($_SESSION['name']); ?>
-          </span>
+          <span><?php echo htmlspecialchars($_SESSION['name']); ?></span>
           <div class="user-icon">👤</div>
         </div>
       </div>
 
       <!-- Content -->
       <div class="content">
-        <div class="welcome-message">
-          <h2>Selamat Datang di Sistem K-MEANS PMB</h2>
-          <p>Kantor Promosi dan Penerimaan Mahasiswa Baru - Universitas Muhammadiyah Banjarmasin</p>
+        <div class="content-header">
+          <h3>Data Program Studi</h3>
+          <a href="tambah_prodi.php" class="btn-tambah">
+            <span>+</span> Tambah
+          </a>
         </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Program Studi</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            $no = 1;
+            while ($row = $result->fetch_assoc()):
+              ?>
+              <tr>
+                <td><?= $no++ ?></td>
+                <td><?= htmlspecialchars($row['name']) ?></td>
+                <td class="action-icons">
+                  <a href="edit_prodi.php?id=<?= $row['id'] ?>" title="Edit">✏️</a>
+                  <a href="hapus_prodi.php?id=<?= $row['id'] ?>" title="Hapus"
+                    onclick="return confirm('Yakin ingin menghapus?')">❌</a>
+                </td>
+              </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- Modal Akun -->
   <div id="accountModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="toggleModal()">&times;</span>
@@ -255,7 +338,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
     }
 
-    // Close modal if user clicks outside the modal content
     window.onclick = function (event) {
       const modal = document.getElementById('accountModal');
       if (event.target === modal) {
