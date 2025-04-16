@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'config.php';
+include '../config.php';
 
 // Cek jika user sudah login, redirect ke dashboard
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $success = "Registrasi berhasil! Anda akan dialihkan ke halaman login dalam 3 detik.";
         echo "<script>
   setTimeout(function() {
-    window.location.href = 'index.php';
+    window.location.href = '../index.php';
   }, 3000);
 </script>";
 
@@ -214,7 +214,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <header class="header">
-    <img src="assets/images/logo.jpeg" alt="Logo" class="header-logo">
+    <img src="../assets/images/logo.jpeg" alt="Logo" class="header-logo">
     <div class="header-text">
       <div class="header-title">Penerimaan Mahasiswa Baru</div>
       <div class="header-subtitle">Universitas Muhammadiyah Banjarmasin</div>
@@ -260,7 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <button type="submit" class="register-btn">Register</button>
         <div class="login-link">
-          Sudah punya akun? <a href="index.php">Login disini</a>
+          Sudah punya akun? <a href="../index.php">Login disini</a>
         </div>
       </form>
     </div>
@@ -278,7 +278,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php if (!empty($success)): ?>
       document.getElementById("successModal").style.display = "flex";
       setTimeout(function () {
-        window.location.href = "index.php";
+        window.location.href = "../index.php";
       }, 3000);
     <?php endif; ?>
   </script>

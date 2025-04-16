@@ -4,7 +4,7 @@ include 'config.php';
 
 // Cek jika user sudah login, redirect ke dashboard
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-  header("Location: dashboard.php");
+  header("Location: ./pages/dashboard.php");
   exit;
 }
 
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $_SESSION['role'] = $user['role'];
 
       // Redirect ke dashboard
-      header("Location: dashboard.php");
+      header("Location: ./pages/dashboard.php");
       exit;
     } else {
       $error = "Password salah!";
@@ -270,7 +270,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="password" id="password" name="password" required>
           </div>
           <button type="submit" class="login-btn">Login</button>
-          <a href="register.php" class="register-btn">Register</a>
+          <a href="pages/register.php" class="register-btn">Register</a>
         </form>
       </div>
     </div>

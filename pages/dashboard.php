@@ -3,7 +3,7 @@ session_start();
 
 // Cek jika user belum login, redirect ke halaman login
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-  header("Location: index.php");
+  header("Location: ../index.php");
   exit;
 }
 ?>
@@ -17,7 +17,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-image: url('assets/images/background.jpeg');
+      background-image: url('../assets/images/background.jpeg');
       background-color: rgba(3, 136, 244, 0.9);
       background-blend-mode: overlay;
       background-size: cover;
@@ -202,8 +202,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       <a href="#">Data PMB</a>
       <a href="#">Data Master</a>
       <div class="submenu">
-        <a href="#">- Fakultas</a>
         <a href="#">- Program Studi</a>
+        <a href="#">- Data Sekolah</a>
       </div>
       <a href="#">Clustering</a>
       <div class="submenu">
