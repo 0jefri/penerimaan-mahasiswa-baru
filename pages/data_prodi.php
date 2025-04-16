@@ -287,15 +287,17 @@ $result = $conn->query($sql);
       <div class="content">
         <div class="content-header">
           <h3>Data Program Studi</h3>
-          <a href="tambah_prodi.php" class="btn-tambah">
+          <a href="javascript:void(0)" onclick="toggleModal('modalTambah')" class="btn-tambah">
             <span>+</span> Tambah
           </a>
+
         </div>
 
         <table class="data-table">
           <thead>
             <tr>
               <th>No</th>
+              <th>ID</th>
               <th>Program Studi</th>
               <th>Aksi</th>
             </tr>
@@ -307,12 +309,15 @@ $result = $conn->query($sql);
               ?>
               <tr>
                 <td><?= $no++ ?></td>
+                <td><?= htmlspecialchars($row['id']) ?></td>
                 <td><?= htmlspecialchars($row['name']) ?></td>
                 <td class="action-icons">
-                  <a href="edit_prodi.php?id=<?= $row['id'] ?>" title="Edit">✏️</a>
-                  <a href="hapus_prodi.php?id=<?= $row['id'] ?>" title="Hapus"
-                    onclick="return confirm('Yakin ingin menghapus?')">❌</a>
+                  <a href="javascript:void(0)"
+                    onclick="bukaEditModal('<?= $row['id'] ?>', '<?= htmlspecialchars($row['name']) ?>')"
+                    title="Edit">✏️</a>
+                  <a href="javascript:void(0)" onclick="bukaHapusModal('<?= $row['id'] ?>')" title="Hapus">❌</a>
                 </td>
+
               </tr>
             <?php endwhile; ?>
           </tbody>
@@ -332,18 +337,71 @@ $result = $conn->query($sql);
     </div>
   </div>
 
+  <div id="modalTambah" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleModal('modalTambah')">&times;</span>
+      <h3>Tambah Program Studi</h3>
+      <form action="tambah_prodi.php" method="POST">
+        <input type="text" name="id_prodi" placeholder="ID Prodi (ex: PR001)" required>
+        <br><br>
+        <input type="text" name="nama_prodi" placeholder="Nama Program Studi" required>
+        <br><br>
+        <button type="submit">Simpan</button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Modal Edit -->
+  <div id="modalEdit" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleModal('modalEdit')">&times;</span>
+      <h3>Edit Program Studi</h3>
+      <form action="edit_prodi.php" method="POST">
+        <input type="hidden" name="id" id="edit_id">
+        <input type="text" name="nama_prodi" id="edit_nama_prodi" required>
+        <br><br>
+        <button type="submit">Update</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Hapus -->
+  <div id="modalHapus" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleModal('modalHapus')">&times;</span>
+      <h3>Konfirmasi Hapus</h3>
+      <form action="hapus_prodi.php" method="POST">
+        <input type="hidden" name="id" id="hapus_id">
+        <p>Apakah Anda yakin ingin menghapus data ini?</p>
+        <button type="submit">Ya, Hapus</button>
+      </form>
+    </div>
+  </div>
+
   <script>
-    function toggleModal() {
-      const modal = document.getElementById('accountModal');
-      modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+    function toggleModal(id = 'accountModal') {
+      const modal = document.getElementById(id);
+      if (modal) modal.style.display = (modal.style.display === 'block' ? 'none' : 'block');
+    }
+
+    function bukaEditModal(id, nama) {
+      document.getElementById('edit_id').value = id;
+      document.getElementById('edit_nama_prodi').value = nama;
+      toggleModal('modalEdit');
+    }
+
+    function bukaHapusModal(id) {
+      document.getElementById('hapus_id').value = id;
+      toggleModal('modalHapus');
     }
 
     window.onclick = function (event) {
-      const modal = document.getElementById('accountModal');
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    }
+      ['modalTambah', 'modalEdit', 'modalHapus', 'accountModal'].forEach(id => {
+        const modal = document.getElementById(id);
+        if (event.target === modal) modal.style.display = "none";
+      });
+    };
   </script>
 </body>
 

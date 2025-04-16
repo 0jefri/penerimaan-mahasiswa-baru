@@ -231,9 +231,9 @@ $result = $conn->query($query);
             <tr>
               <th>No</th>
               <th>Nama Sekolah</th>
-              <th>Pendidikan</th>
-              <th>Provinsi</th>
+              <th>Kecamatan</th>
               <th>Kabupaten</th>
+              <th>Provinsi</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -246,8 +246,8 @@ $result = $conn->query($query);
                 <td><?= $no++ ?></td>
                 <td><?= htmlspecialchars($row['name']) ?></td>
                 <td><?= htmlspecialchars($row['kecamatan']) ?></td>
-                <td><?= htmlspecialchars($row['provinsi']) ?></td>
                 <td><?= htmlspecialchars($row['kabupaten']) ?></td>
+                <td><?= htmlspecialchars($row['provinsi']) ?></td>
                 <td class="action-icons">
                   <a href="edit_sekolah.php?id=<?= $row['id'] ?>" title="Edit">✏️</a>
                   <a href="hapus_sekolah.php?id=<?= $row['id'] ?>" title="Hapus"
